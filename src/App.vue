@@ -1,26 +1,77 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="container-fluid">
+    <div v-if="mobile" class="row">
+      <the-navbar/>
+      <div class="col-sm  min-vh-100">
+        <router-view />
+      </div>
+    </div>
+  <div v-else>
+      <mobile-error/>
+  </div>
+  </div>
+
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import TheNavbar from "./components/theNavbar";
+import MobileError from "./components/mobileError";
 export default {
-  name: 'App',
+  data(){
+    return{
+      mobile: true,
+    }
+  },
   components: {
-    HelloWorld
-  }
+    MobileError, TheNavbar
+  },
+  created(){
+    this.checkScreen();
+    window.addEventListener("resize", this.checkScreen);
+  },
+  methods : {
+    checkScreen(){
+      const windowWidth = window.innerWidth;
+      if(windowWidth <= 750){
+        this.mobile= false;
+      }else this.mobile=true;
+    }
+  },
+
 }
+
+
 </script>
 
+
+
+
+
+
+
+
 <style>
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,700;1,900&display=swap");
+@import url("https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet");
+* {
+  font-family: "Poppins", sans-serif;
+
+}
+html , body {
+  height:100%;
+  width: 100%;
+  background-color: 	#18191a !important;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+
 }
+button:focus { outline: none !important;
+outline-offset: 0 !important;
+}
+
+
 </style>
