@@ -18,7 +18,7 @@
               </svg>
               Nouvelle Facture
             </button>
-            <button class="rounded-pill btn nvfacture disabled btn-outline-primary  align-items-center" @click="newInvoice" v-else>
+            <button v-else class="rounded-pill btn nvfacture disabled btn-outline-primary  align-items-center">
 
               Creation du facture...
             </button>
@@ -46,8 +46,9 @@
 
       </div>
     </div>
-
+    <transition name="fade">
       <invoice-modal v-show="invoiceModal"/>
+    </transition>
 
 
   </div>
@@ -89,12 +90,23 @@ export default {
 <style    scoped>
 
 
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 1s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+
+  opacity: 0;
+}
+
 .fac {
-font-weight: bold;
+  font-weight: bold;
 }
 
 p {
-font-size: 15px;
+  font-size: 15px;
 }
 
 .btn, .content {
