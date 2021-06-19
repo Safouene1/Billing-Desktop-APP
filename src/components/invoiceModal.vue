@@ -1,10 +1,10 @@
 <template>
 
-  <div ref="invoiceWrap" class="mod " @click="checkClick">
+  <div>
 
     <div class="modal-dialog  modal-dialog-scrollable">
 
-      <div class="modal-content ">
+      <div class="modal-content">
         <div class="modal-header px-5">
 
           <h5 class="modal-title">Nouvelle Facture</h5>
@@ -39,7 +39,7 @@
           <table class="table table-dark table-striped">
             <thead>
             <tr>
-              <th scope="col">Nom du Client</th>
+              <th scope="col">Nom du Patient</th>
               <th colspan="2" scope="col">Designation</th>
               <th scope="col">Prix en TND</th>
               <th>
@@ -108,7 +108,7 @@
           <div class="modal-footer">
             <button class="btn btn-secondary" type="button" @click="closeInvoice">Fermer</button>
 
-            <button v-if="!loading" class="btn btn-dark" type="submit" @click="saveInvoice">Sauvagarder</button>
+            <button v-if="!loading" class="btn btn-primary" type="submit" @click="saveInvoice">Sauvagarder</button>
             <button v-else class="btn btn-primary" disabled type="button">
               <span aria-hidden="true" class="spinner-grow  spinner-grow-sm" role="status"></span>
               Loading ...
@@ -141,7 +141,7 @@ export default {
       clientEmail: this.clientEmail,
       invoiceDate: this.invoiceDate,
       invoicePending: this.invoicePending,
-      invoicePaid: this.invoicePaid,
+      invoicePaid: null,
       prixInvoice: 0,
       loading: false,
       items: [],
@@ -171,10 +171,12 @@ export default {
   },
 
   methods: {
-    ...mapMutations(['TOGGLE_INVOICE']),
+    ...mapMutations(['TOGGLE_INVOICE', 'OPEN_MODAl']),
     closeInvoice() {
-      this.TOGGLE_INVOICE();
+
+      this.OPEN_MODAl();
     },
+
     addNewItems() {
       this.items.push({
         id: uid(),
@@ -193,7 +195,6 @@ export default {
     },
     async uploadInvoice() {
 
-
       this.loading = true;
       const dataBase = db.collection('invoices').doc();
       await dataBase.set({
@@ -202,7 +203,7 @@ export default {
         clientEmail: this.clientEmail,
         invoiceDate: this.invoiceDate,
         invoicePending: this.invoicePending,
-        invoicePaid: null,
+        invoicePaid: this.invoicePaid,
         items: this.items,
         prixTotal: this.prixTotal,
       })
@@ -232,7 +233,7 @@ export default {
   border: none;
   position: fixed;
   z-index: 60; /* Sit on top */
-  left: 10%;
+  left: 5rem;
   top: 0;
   width: 70%; /* Full width */
   height: 100%; /* Full height */

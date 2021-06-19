@@ -1,14 +1,14 @@
 <template>
-  <div class="container-fluid">
+  <div class="container-fluid" @click="checkClick">
     <div v-if="mobile" class="row">
       <the-navbar/>
-      <div class="col-sm  min-vh-100">
-        <router-view />
+      <div ref="invoiceWrap" class="col-sm  min-vh-100">
+        <router-view/>
       </div>
     </div>
-  <div v-else>
+    <div v-else>
       <mobile-error/>
-  </div>
+    </div>
   </div>
 
 </template>
@@ -16,6 +16,7 @@
 <script>
 import TheNavbar from "./components/theNavbar";
 import MobileError from "./components/mobileError";
+import {mapActions, mapMutations, mapState} from "vuex";
 export default {
   data(){
     return{
@@ -25,18 +26,28 @@ export default {
   components: {
     MobileError, TheNavbar
   },
+
   created(){
+    this.GET_INVOICES();
     this.checkScreen();
     window.addEventListener("resize", this.checkScreen);
   },
   methods : {
-    checkScreen(){
+    ...mapActions(['GET_INVOICES']),
+    ...mapMutations(['TOGGLE_MODAL']),
+
+    checkScreen() {
       const windowWidth = window.innerWidth;
-      if(windowWidth <= 750){
-        this.mobile= false;
-      }else this.mobile=true;
+      if (windowWidth <= 750) {
+        this.mobile = false;
+      } else this.mobile = true;
     }
   },
+  computed: {
+    ...mapState(['invoiceModal', 'warningModal']),
+
+  }
+
 
 }
 
