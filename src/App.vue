@@ -1,5 +1,6 @@
 <template>
-  <div class="container-fluid" @click="checkClick">
+
+  <div class="container-fluid " @click="checkClick">
     <div v-if="mobile" class="row">
       <the-navbar/>
       <div ref="invoiceWrap" class="col-sm  min-vh-100">
@@ -17,6 +18,7 @@
 import TheNavbar from "./components/theNavbar";
 import MobileError from "./components/mobileError";
 import {mapActions, mapMutations, mapState} from "vuex";
+
 export default {
   data(){
     return{
@@ -24,6 +26,7 @@ export default {
     }
   },
   components: {
+
     MobileError, TheNavbar
   },
 
@@ -80,9 +83,19 @@ html , body {
   text-align: center;
 
 }
-button:focus { outline: none !important;
-outline-offset: 0 !important;
+
+button:focus {
+  outline: none !important;
+  outline-offset: 0 !important;
 }
 
+a {
+  color: #e4e6eb;
+  text-decoration: none;
 
+}
+
+a:hover {
+  color: white;
+}
 </style>

@@ -3,10 +3,25 @@
 
     <div v-show="currentInvoice" class="container">
 
+
       <div id="invoiceholder">
+        <nav class=" container flex centerthis">
+          <ol class="breadcrumb">
+            <router-link :to="{name:'Invoice'}" class="breadcrumb-item ">
+              <svg class="bi bi-arrow-left" fill="currentColor" height="16" viewBox="0 0 16 16" width="16"
+                   xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"
+                    fill-rule="evenodd"/>
+              </svg>
+              Go Back
+            </router-link>
+          </ol>
+        </nav>
 
 
-        <div class="d-grid    py-3 buton mt-5 d-md-flex ">
+        <div class="  py-3 buton mt-5 d-md-flex ">
+
           <div class=" px-5 justify-content-start">
             <h6 :class="{ pending : currentInvoice.invoicePending, paid : currentInvoice.invoicePaid  }"
                 class=" py-2 px-5 text-white rounded-pill"
@@ -240,6 +255,11 @@ h3 {
   line-height: 2em;
 }
 
+.centerthis {
+  margin: 0 auto;
+  width: 800px;
+}
+
 .buton {
 
   margin: 0 auto;
@@ -256,8 +276,12 @@ p {
 
 #invoiceholder {
   width: 100%;
-  hieght: 100%;
+  height: 100%;
   padding-top: 50px;
+}
+
+.breadcrumb {
+  color: #8b8a8a;
 }
 
 .line {
@@ -314,6 +338,16 @@ p {
   width: 160px;
 
   background-size: 160px 70px;
+}
+
+a {
+  color: #e4e6eb;
+  text-decoration: none;
+
+}
+
+a:hover {
+  color: #0275db;
 }
 
 .client {

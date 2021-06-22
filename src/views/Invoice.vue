@@ -81,6 +81,7 @@
               </div>
             </div>
           </div>
+
           <invoices-list v-for="(invoice , index) in invoiceData" :key="index" :invoice="invoice"/>
         </div>
       </div>
@@ -137,7 +138,7 @@ export default {
 
   },
   computed: {
-    ...mapState(['invoiceModal', 'warningModal', 'invoiceData'])
+    ...mapState(['invoiceModal', 'warningModal', 'invoiceData', 'invoicesLoaded'])
   }
 };
 </script>
