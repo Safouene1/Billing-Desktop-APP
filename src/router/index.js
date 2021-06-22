@@ -1,6 +1,7 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import {createRouter, createWebHashHistory, createWebHistory} from 'vue-router'
 import Invoice from '../views/Invoice.vue'
 import invoiceView from "../views/invoiceView";
+
 const routes = [
     {
         path: '/',
@@ -15,8 +16,9 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(),
-  routes
+
+    history: process.env.IS_ELECTRON ? createWebHashHistory() : createWebHistory(),
+    routes
 })
 
 export default router

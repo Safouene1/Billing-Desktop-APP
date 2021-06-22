@@ -104,8 +104,7 @@
 
 
 import InvoiceModal from "../components/invoiceModal";
-import {mapMutations} from "vuex";
-import {mapState} from "vuex"
+import {mapMutations, mapState} from "vuex";
 import WarningModal from "../components/warningModal";
 import InvoicesList from "../components/invoicesList";
 import NoData from "../components/noData";
@@ -192,6 +191,8 @@ li {
 }
 
 .drop {
+  position: absolute;
+  z-index: 1;
   background-color: #141415;
   padding: 15px 5px;
 
