@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <warning-modal v-show="warningModal"/>
+
     <div class="container-fluid content ">
       <div class="  mt-4 flex-column align-items-start">
         <h1 class="fac"> Factures </h1>
@@ -88,12 +88,7 @@
 
     </div>
 
-    <transition name="fade">
-
-      <invoice-modal v-show="invoiceModal" ref="invoiceWrap"/>
-
-
-    </transition>
+      <invoice-modal v-if="invoiceModal"/>
 
 
   </div>
@@ -106,7 +101,7 @@
 
 import InvoiceModal from "../components/invoiceModal";
 import {mapMutations, mapState} from "vuex";
-import WarningModal from "../components/warningModal";
+
 import InvoicesList from "../components/invoicesList";
 import NoData from "../components/noData";
 
@@ -115,13 +110,13 @@ export default {
   components: {
     NoData,
     InvoicesList,
-    WarningModal,
+
     InvoiceModal,
 
   },
   data() {
     return {
-      number: 6,
+
       filtermenu: null,
     }
   },
@@ -138,7 +133,7 @@ export default {
 
   },
   computed: {
-    ...mapState(['invoiceModal', 'warningModal', 'invoiceData', 'invoicesLoaded'])
+    ...mapState(['invoiceModal', 'invoiceData', 'invoicesLoaded'])
   }
 };
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div>
-
+<InvoiceModal v-if="invoiceModal"/>
     <div v-show="currentInvoice" class="container">
 
 
@@ -14,23 +14,34 @@
                     d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"
                     fill-rule="evenodd"/>
               </svg>
-              Go Back
+              Retour
             </router-link>
           </ol>
         </nav>
 
 
-        <div class="  py-3 buton mt-5 d-md-flex ">
+        <div class="   row py-3  buton  d-flex ">
 
-          <div class=" px-5 justify-content-start">
+          <div class=" col-5 px-5 btn justify-content-start">
+
             <h6 :class="{ pending : currentInvoice.invoicePending, paid : currentInvoice.invoicePaid  }"
                 class=" py-2 px-5 text-white rounded-pill"
-                type="button ">
-              {{ Status }}</h6>
+                type="button " @click="togglePayementStatus">
+              <svg class="bi bi-arrow-repeat justify-content-start" fill="currentColor" height="25" viewBox="0 0 16 16"
+                   width="25" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
+                <path
+                    d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"
+                    fill-rule="evenodd"/>
+              </svg>
+              {{ Status }}
+            </h6>
 
           </div>
-          <div class="justify-content-end">
-            <button class="btn btn-outline-primary btn-md mx-2 " type="button" @click="toggleEditInvoice">
+
+          <div class=" col-auto justify-content-end mt-2">
+            <button class="btn btn-warning btn-md mx-2 " type="button" @click="toggleEditInvoice">
 
               <svg class="bi bi-pencil-fill" fill="currentColor" height="16" viewBox="0 0 16 16" width="16"
                    xmlns="http://www.w3.org/2000/svg">
@@ -39,7 +50,7 @@
               </svg>
               Modifier
             </button>
-            <button class="btn btn-outline-warning btn-md mx-2" type="button" @click="print()">
+            <button class="btn btn-warning btn-md mx-2" type="button" @click="print()">
               <svg class="bi bi-printer-fill" fill="currentColor" height="16" viewBox="0 0 16 16" width="16"
                    xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -50,7 +61,7 @@
 
               Imprimer
             </button>
-            <button class="btn btn-outline-danger btn-md mx-2 " type="button">
+            <button class="btn btn-warning btn-md mx-2 " type="button">
 
               <svg class="bi bi-trash-fill" fill="currentColor" height="16" viewBox="0 0 16 16" width="16"
                    xmlns="http://www.w3.org/2000/svg">
@@ -160,10 +171,11 @@
 <script>
 
 import {mapMutations, mapState} from "vuex";
+import InvoiceModal from "../components/invoiceModal";
 
 export default {
   name: "invoiceView",
-  components: {},
+  components: {InvoiceModal},
   data() {
     return {
       currentInvoice: null,
@@ -173,10 +185,14 @@ export default {
     this.getCurrentInvoice();
   },
   methods: {
-    ...mapMutations(['SET_CURRENT_INVOICE', 'TOGGLE_EDIT_INVOICE']),
+    ...mapMutations(['SET_CURRENT_INVOICE', 'TOGGLE_EDIT_INVOICE', 'TOGGLE_INVOICE']),
     getCurrentInvoice() {
       this.SET_CURRENT_INVOICE(this.$route.params.invoiceId);
       this.currentInvoice = this.currentInvoiceArray[0];
+    },
+    togglePayementStatus() {
+      this.currentInvoice.invoicePending = !this.currentInvoice.invoicePending;
+      this.currentInvoice.invoicePaid = !this.currentInvoice.invoicePaid;
     },
     toggleEditInvoice() {
       this.TOGGLE_EDIT_INVOICE();
@@ -184,7 +200,6 @@ export default {
     },
     async print() {
       await this.$htmlToPaper('invoice', {
-
 
         name: 'facture',
         specs: [
@@ -208,12 +223,12 @@ export default {
   },
 
   computed: {
-    ...mapState(['currentInvoiceArray']),
+    ...mapState(['currentInvoiceArray', 'invoiceModal']),
     Status() {
       if (this.currentInvoice.invoicePending) {
-        return "En Attente"
+        return " En Attente"
       }
-      return "payé"
+      return " Payé"
     },
   }
 }
@@ -227,18 +242,15 @@ export default {
 
 }
 
+
 body {
-  background: #E0E0E0;
 
 
   background-repeat: repeat-y;
   background-size: 100%;
 }
 
-::selection {
-  background: #f31544;
-  color: #FFF;
-}
+
 
 h1 {
   font-size: 1.5em;
@@ -256,16 +268,19 @@ h3 {
 }
 
 .centerthis {
+
   margin: 0 auto;
   width: 800px;
 }
 
 .buton {
+  background: #141415;
 
   margin: 0 auto;
   width: 800px;
-  background-color: #141415;
-  padding: 15px;
+
+
+  padding: 20px;
 }
 
 p {
@@ -312,7 +327,7 @@ p {
   top: -290px;
   margin: 0 auto;
   width: 800px;
-  background: #FFF;
+  background: #e4e6eb;
 }
 
 [id*='invoice-'] { /* Targets all id with 'col-' */
@@ -418,21 +433,22 @@ td {
   width: 30%;
 }
 
-.pending {
+.pending:hover {
+  background-color: #11A200;
 
-  border: 2px solid #FF6900;
 
 }
 
-.pending:hover {
+.pending {
+  background-color: #FF6900;
+}
+
+.paid:hover {
+
   background-color: #FF6900;
 }
 
 .paid {
-  border: 2px solid #11A200;
-}
-
-.paid:hover {
   background-color: #11A200;
 }
 

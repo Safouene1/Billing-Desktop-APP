@@ -1,4 +1,47 @@
 <template>
+  <!-- warning modal --->
+  <div v-if="warning" class="container mt-4">
+    <div id="demo">
+
+      <div class="warning-dialog">
+        <div class="warning-content   ">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="text-white">
+              <svg class="bi bi-exclamation-lg" fill="currentColor" height="20" viewBox="0 0 16 16" width="20"
+                   xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M6.002 14a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm.195-12.01a1.81 1.81 0 1 1 3.602 0l-.701 7.015a1.105 1.105 0 0 1-2.2 0l-.7-7.015z"/>
+              </svg>
+              Attention
+            </h4>
+            <button class=" btn btn-secondary" type="button" @click="toggleWarning">
+              <svg class="bi bi-x-circle-fill" fill="currentColor" height="16" viewBox="0 0 16 16" width="16"
+                   xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body mb-2">êtes-vous sûr de vouloir quitter? <br/> vos modifications ne seront pas
+            enregistrées
+            <div class="py-2">
+              <button class="btn btn-secondary  mx-3" type="button" @click="toggleWarning">Retour</button>
+              <button class="btn btn-danger" type="button" @click="closeInvoice">Oui , Fermer</button>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- warning modal end --->
 
   <div>
 
@@ -6,9 +49,9 @@
 
       <div class="modal-content">
         <div class="modal-header px-5">
-
-          <h5 class="modal-title">Nouvelle Facture</h5>
-          <button class="btn-close btn-close-white" type="button" @click="closeInvoice"></button>
+          <h5 v-if="editInvoice" class="modal-title">Modifier Facture</h5>
+          <h5 v-else class="modal-title">Nouvelle Facture</h5>
+          <button class="btn-close btn-close-white" type="button" @click="toggleWarning"></button>
         </div>
 
         <form class="modal-body" @submit.prevent="submitForm">
@@ -106,7 +149,7 @@
             </p>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" @click="closeInvoice">Fermer</button>
+            <button class="btn btn-secondary" type="button" @click="toggleWarning">Fermer</button>
 
             <button v-if="!loading" class="btn btn-primary" type="submit" @click="saveInvoice">Sauvagarder</button>
             <button v-else class="btn btn-primary" disabled type="button">
@@ -127,8 +170,9 @@
 </template>
 
 <script>
+
 import db from "../firebase/firebaseinit"
-import {mapMutations} from "vuex";
+import {mapActions, mapMutations, mapState} from "vuex";
 import {uid} from "uid";
 
 export default {
@@ -146,9 +190,11 @@ export default {
       loading: false,
       items: [],
       isDisabled: true,
+      warning: null,
     }
   },
   computed: {
+    ...mapState(['editInvoice', 'currentInvoiceArray']),
     prixTotal() {
       let prixTotal = 0;
       if (this.isDisabled) {
@@ -171,10 +217,17 @@ export default {
   },
 
   methods: {
-    ...mapMutations(['TOGGLE_INVOICE', 'OPEN_MODAl']),
+    ...mapActions(['UPDATE_INVOICE']),
+    ...mapMutations(['TOGGLE_INVOICE', 'TOGGLE_INVOICE', 'TOGGLE_EDIT_INVOICE']),
     closeInvoice() {
-
-      this.OPEN_MODAl();
+      this.toggleWarning();
+      this.TOGGLE_INVOICE();
+      if (this.editInvoice) {
+        this.TOGGLE_EDIT_INVOICE();
+      }
+    },
+    toggleWarning() {
+      this.warning = !this.warning;
     },
 
     addNewItems() {
@@ -210,11 +263,44 @@ export default {
       this.loading = false;
       this.TOGGLE_INVOICE();
     },
+    async updateInvoice() {
+
+      this.loading = true;
+      const dataBase = db.collection('invoices').doc(this.docId);
+      await dataBase.update({
+        clientName: this.clientName,
+        clientEmail: this.clientEmail,
+        invoiceDate: this.invoiceDate,
+        items: this.items,
+        prixTotal: this.prixTotal,
+      })
+      this.loading = false;
+      const data = {
+        docId: this.docId,
+        routeId: this.$route.params.invoiceId,
+      };
+      this.UPDATE_INVOICE(data);
+
+    },
     submitForm() {
+      if (this.editInvoice) {
+        this.updateInvoice();
+      }
       this.uploadInvoice();
 
     }
   },
+  created() {
+    if (this.editInvoice) {
+      this.invoiceId = this.currentInvoiceArray[0].invoiceId,
+          this.clientName = this.currentInvoiceArray[0].clientName,
+          this.clientEmail = this.currentInvoiceArray[0].clientEmail,
+          this.invoiceDate = this.currentInvoiceArray[0].invoiceDate,
+          this.prixInvoice = this.currentInvoiceArray[0].prixInvoice,
+          this.items = this.currentInvoiceArray[0].items,
+          this.prixTotal = this.currentInvoiceArray[0].prixTotal
+    }
+  }
 
 
 }
@@ -238,6 +324,23 @@ export default {
   width: 70%; /* Full width */
   height: 100%; /* Full height */
   overflow: auto; /* Enable scroll if needed */
+}
+
+.warning-content {
+  color: #e4e6eb;
+  position: fixed;
+  top: 30%;
+  width: 50%;
+
+  background-color: #15202B;
+  z-index: 10000000000;
+
+}
+
+.btn-do {
+  background-color: #570108;
+  color: white;
+
 }
 
 .form-control {

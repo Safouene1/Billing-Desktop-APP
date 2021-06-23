@@ -20,6 +20,7 @@
               <div class="col-2 align-middle ">
                 <p :class="{ pending : invoice.invoicePending, paid : invoice.invoicePaid  }" class=" py-2 rounded-pill"
                    type="button ">
+
                   {{ Status }}</p>
               </div>
               <div class="col-2 align-middle">
@@ -91,23 +92,25 @@ export default {
 
 }
 
-.pending {
+.pending:hover {
+  background-color: #11A200;
 
-  border: 2px solid #FF6900;
 
 }
 
-.pending:hover {
+.pending {
+  background-color: #FF6900;
+}
+
+.paid:hover {
+
   background-color: #FF6900;
 }
 
 .paid {
-  border: 2px solid #11A200;
-}
-
-.paid:hover {
   background-color: #11A200;
 }
+
 
 a {
   color: #e4e6eb;

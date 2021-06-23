@@ -1,6 +1,6 @@
 <template>
 
-  <div class="container-fluid " @click="checkClick">
+  <div class="container-fluid ">
     <div v-if="mobile" class="row">
       <the-navbar/>
       <div ref="invoiceWrap" class="col-sm  min-vh-100">

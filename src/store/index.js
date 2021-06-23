@@ -21,7 +21,7 @@ export default createStore({
     },
     OPEN_MODAl(state) {
       state.warningModal = true;
-      state.animate = !state.animate;
+
     },
     CLOSE_MODAl(state) {
       state.warningModal = false;
@@ -40,6 +40,9 @@ export default createStore({
     },
     TOGGLE_EDIT_INVOICE(state) {
       state.editInvoice = !state.editInvoice;
+    },
+    DELETE_INVOICE(state, payload) {
+      state.invoiceData = state.invoiceData.filter(invoice => invoice.docId !== payload)
     }
   },
   actions: {
@@ -63,9 +66,14 @@ export default createStore({
         }
       });
       commit('INVOICES_LOADED');
+    },
+    async UPDATE_INVOICE(commit, dispatch, {docId, routeId}) {
+      commit("DELETE_INVOICE", docId, routeId);
+      await dispatch("GET_INVOICES");
+      commit("TOGGLE_INVOICE");
+      commit("TOGGLE_EDIT_INVOICE");
+      commit("TOGGLE_EDIT_INVOICE", routeId);
     }
-
   },
-  modules: {
-  }
+  modules: {}
 })
