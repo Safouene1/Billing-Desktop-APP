@@ -18,10 +18,19 @@
                 {{ invoice.prixTotal }} TND
               </div>
               <div class="col-2 align-middle ">
-                <p :class="{ pending : invoice.invoicePending, paid : invoice.invoicePaid  }" class=" py-2 rounded-pill"
+                <p :class="{ pending : invoice.invoicePending, paid : invoice.invoicePaid  }" class=" py-2 rounded"
                    type="button ">
-
-                  {{ Status }}</p>
+                  <svg v-if="invoice.invoicePending" class="bi px-2 bi-circle-fill" fill="currentColor" height="32"
+                       viewBox="0 0 16 16" width="32" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="8" cy="8" r="8"/>
+                  </svg>
+                  <svg v-else class="bi bi-check-circle-fill" fill="currentColor" height="16" viewBox="0 0 16 16"
+                       width="32" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                  </svg>
+                  {{ Status }}
+                </p>
               </div>
               <div class="col-2 align-middle">
                 <button class="btn btn-dark mx-1">
@@ -78,7 +87,7 @@ export default {
 
 <style scoped>
 .main-wrapper {
-  background-color: #242526;
+  background-color: #1E1E1E;
   color: #e4e6eb;
 }
 
@@ -87,28 +96,24 @@ export default {
   padding: 2px;
 }
 
-.item:hover {
-  background-color: #3A3B3C;
+.row:hover {
+  background-color: #373737;
 
 }
 
-.pending:hover {
-  background-color: #11A200;
+.pending:hover, .paid:hover {
+  background-color: #1E1E1E;
 
 
 }
 
 .pending {
-  background-color: #FF6900;
+  border: 1px solid #FFC68A;
 }
 
-.paid:hover {
-
-  background-color: #FF6900;
-}
 
 .paid {
-  background-color: #11A200;
+  border: 1px solid #4ACFAC;
 }
 
 
@@ -116,6 +121,14 @@ a {
   color: #e4e6eb;
   text-decoration: none;
 
+}
+
+.bi-circle-fill {
+  color: #FFC68A;
+}
+
+.bi-check-circle-fill {
+  color: #4ACFAC;
 }
 
 a:hover {

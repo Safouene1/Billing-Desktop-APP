@@ -11,7 +11,8 @@ const routes = [
     {
         path: '/invoice/:invoiceId',
         name: 'InvoiceView',
-        component: invoiceView
+        component: invoiceView,
+        props: true
     },
 ]
 

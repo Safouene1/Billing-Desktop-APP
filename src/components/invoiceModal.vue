@@ -187,6 +187,7 @@ export default {
       invoicePending: this.invoicePending,
       invoicePaid: null,
       prixInvoice: 0,
+      docId: null,
       loading: false,
       items: [],
       isDisabled: true,
@@ -275,24 +276,30 @@ export default {
         prixTotal: this.prixTotal,
       })
       this.loading = false;
+
       const data = {
         docId: this.docId,
         routeId: this.$route.params.invoiceId,
       };
+      console.log(data)
       this.UPDATE_INVOICE(data);
 
     },
     submitForm() {
       if (this.editInvoice) {
         this.updateInvoice();
+      } else {
+        console.log("yoho");
+        this.uploadInvoice();
       }
-      this.uploadInvoice();
+
 
     }
   },
   created() {
     if (this.editInvoice) {
-      this.invoiceId = this.currentInvoiceArray[0].invoiceId,
+      this.docId = this.currentInvoiceArray[0].docId,
+          this.invoiceId = this.currentInvoiceArray[0].invoiceId,
           this.clientName = this.currentInvoiceArray[0].clientName,
           this.clientEmail = this.currentInvoiceArray[0].clientEmail,
           this.invoiceDate = this.currentInvoiceArray[0].invoiceDate,

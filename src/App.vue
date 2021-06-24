@@ -72,9 +72,9 @@ export default {
 
 }
 html , body {
-  height:100%;
+  height: 100%;
   width: 100%;
-  background-color: 	#18191a !important;
+  background-color: #121212 !important;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

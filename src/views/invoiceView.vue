@@ -1,7 +1,7 @@
 <template>
   <div>
-<InvoiceModal v-if="invoiceModal"/>
-    <div v-show="currentInvoice" class="container">
+    <InvoiceModal v-if="invoiceModal"/>
+    <div v-if="currentInvoice" class="container">
 
 
       <div id="invoiceholder">
@@ -25,10 +25,11 @@
           <div class=" col-5 px-5 btn justify-content-start">
 
             <h6 :class="{ pending : currentInvoice.invoicePending, paid : currentInvoice.invoicePaid  }"
-                class=" py-2 px-5 text-white rounded-pill"
+                class=" py-2 px-5 text-white rounded "
                 type="button " @click="togglePayementStatus">
-              <svg class="bi bi-arrow-repeat justify-content-start" fill="currentColor" height="25" viewBox="0 0 16 16"
-                   width="25" xmlns="http://www.w3.org/2000/svg">
+              <svg class="bi bi-arrow-repeat px-1 justify-content-start" fill="currentColor" height="32"
+                   viewBox="0 0 16 16"
+                   width="32" xmlns="http://www.w3.org/2000/svg">
                 <path
                     d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
                 <path
@@ -41,7 +42,7 @@
           </div>
 
           <div class=" col-auto justify-content-end mt-2">
-            <button class="btn btn-warning btn-md mx-2 " type="button" @click="toggleEditInvoice">
+            <button class="btn btn-crud  btn-md mx-2 " type="button" @click="toggleEditInvoice">
 
               <svg class="bi bi-pencil-fill" fill="currentColor" height="16" viewBox="0 0 16 16" width="16"
                    xmlns="http://www.w3.org/2000/svg">
@@ -50,7 +51,7 @@
               </svg>
               Modifier
             </button>
-            <button class="btn btn-warning btn-md mx-2" type="button" @click="print()">
+            <button class="btn btn-crud btn-md mx-2" type="button" @click="print()">
               <svg class="bi bi-printer-fill" fill="currentColor" height="16" viewBox="0 0 16 16" width="16"
                    xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -61,7 +62,7 @@
 
               Imprimer
             </button>
-            <button class="btn btn-warning btn-md mx-2 " type="button">
+            <button class="btn  btn-crud btn-md mx-2 " type="button">
 
               <svg class="bi bi-trash-fill" fill="currentColor" height="16" viewBox="0 0 16 16" width="16"
                    xmlns="http://www.w3.org/2000/svg">
@@ -183,6 +184,8 @@ export default {
   },
   created() {
     this.getCurrentInvoice();
+
+
   },
   methods: {
     ...mapMutations(['SET_CURRENT_INVOICE', 'TOGGLE_EDIT_INVOICE', 'TOGGLE_INVOICE']),
@@ -251,7 +254,6 @@ body {
 }
 
 
-
 h1 {
   font-size: 1.5em;
   color: #222;
@@ -281,6 +283,16 @@ h3 {
 
 
   padding: 20px;
+}
+
+.btn-crud {
+  background-color: #FFC68A;
+  color: #121212;
+}
+
+.btn-crud:hover {
+  background-color: #e59827;
+
 }
 
 p {
@@ -433,24 +445,26 @@ td {
   width: 30%;
 }
 
-.pending:hover {
-  background-color: #11A200;
+.bi-arrow-repeat:hover {
+  transform: rotate(80deg);
+}
+
+.pending:hover, .paid:hover {
+
+
+  background-color: #1E1E1E;
 
 
 }
+
 
 .pending {
-  background-color: #FF6900;
+  border: 1px solid #FFC68A;
 }
 
-.paid:hover {
-
-  background-color: #FF6900;
-}
 
 .paid {
-  background-color: #11A200;
+  border: 1px solid #4ACFAC;
 }
-
 
 </style>
