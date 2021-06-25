@@ -5,6 +5,7 @@
       <the-navbar/>
       <div ref="invoiceWrap" class="col-sm  min-vh-100">
         <router-view/>
+        <TheFooter/>
       </div>
     </div>
     <div v-else>
@@ -18,6 +19,7 @@
 import TheNavbar from "./components/theNavbar";
 import MobileError from "./components/mobileError";
 import {mapActions, mapMutations, mapState} from "vuex";
+import TheFooter from "./components/theFooter";
 
 export default {
   data(){
@@ -26,6 +28,7 @@ export default {
     }
   },
   components: {
+    TheFooter,
 
     MobileError, TheNavbar
   },
@@ -67,15 +70,40 @@ export default {
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,700;1,900&display=swap");
 @import url("https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet");
+
 * {
   font-family: "Poppins", sans-serif;
 
 }
-html , body {
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #383838;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #FFC68A;
+}
+
+html, body {
   height: 100%;
   width: 100%;
   background-color: #121212 !important;
 }
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

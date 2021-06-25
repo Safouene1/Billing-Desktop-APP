@@ -22,11 +22,10 @@
 
         <div class="   row py-3  buton  d-flex ">
 
-          <div class=" col-5 px-5 btn justify-content-start">
+          <div class=" col-5 px-5 btn ">
 
-            <h6 :class="{ pending : currentInvoice.invoicePending, paid : currentInvoice.invoicePaid  }"
-                class=" py-2 px-5 text-white rounded "
-                type="button " @click="togglePayementStatus">
+            <h6 v-if="currentInvoice.invoicePending" class=" pending  py-2 text-white rounded "
+                type="button " @click="markAsPaid(currentInvoice.docId)">
               <svg class="bi bi-arrow-repeat px-1 justify-content-start" fill="currentColor" height="32"
                    viewBox="0 0 16 16"
                    width="32" xmlns="http://www.w3.org/2000/svg">
@@ -36,15 +35,28 @@
                     d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"
                     fill-rule="evenodd"/>
               </svg>
-              {{ Status }}
+              Marquer : Payé
             </h6>
 
+            <h6 v-else class=" paid  py-2 text-white rounded "
+                type="button " @click="markAsPending(currentInvoice.docId)">
+              <svg class="bi bi-arrow-repeat px-1 justify-content-start" fill="currentColor" height="32"
+                   viewBox="0 0 16 16"
+                   width="32" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
+                <path
+                    d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"
+                    fill-rule="evenodd"/>
+              </svg>
+              Marquer : En Attente
+            </h6>
           </div>
 
           <div class=" col-auto justify-content-end mt-2">
-            <button class="btn btn-crud  btn-md mx-2 " type="button" @click="toggleEditInvoice">
+            <button class="btn  btn-crud btn-md mx-2 " type="button" @click="toggleEditInvoice">
 
-              <svg class="bi bi-pencil-fill" fill="currentColor" height="16" viewBox="0 0 16 16" width="16"
+              <svg class="px-1 bi bi-pencil-fill" fill="currentColor" height="20" viewBox="0 0 16 16" width="20"
                    xmlns="http://www.w3.org/2000/svg">
                 <path
                     d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
@@ -62,7 +74,7 @@
 
               Imprimer
             </button>
-            <button class="btn  btn-crud btn-md mx-2 " type="button">
+            <button class="btn  btn-crud btn-md mx-2 " type="button" @click="deleteInvoice(currentInvoice.docId)">
 
               <svg class="bi bi-trash-fill" fill="currentColor" height="16" viewBox="0 0 16 16" width="16"
                    xmlns="http://www.w3.org/2000/svg">
@@ -171,7 +183,7 @@
 
 <script>
 
-import {mapMutations, mapState} from "vuex";
+import {mapActions, mapMutations, mapState} from "vuex";
 import InvoiceModal from "../components/invoiceModal";
 
 export default {
@@ -184,22 +196,30 @@ export default {
   },
   created() {
     this.getCurrentInvoice();
-
-
   },
   methods: {
     ...mapMutations(['SET_CURRENT_INVOICE', 'TOGGLE_EDIT_INVOICE', 'TOGGLE_INVOICE']),
+    ...mapActions(['DELETE_INVOICE', 'UPDATE_STATUS_TO_PAID', 'UPDATE_STATUS_TO_PENDING']),
+
     getCurrentInvoice() {
       this.SET_CURRENT_INVOICE(this.$route.params.invoiceId);
       this.currentInvoice = this.currentInvoiceArray[0];
     },
-    togglePayementStatus() {
-      this.currentInvoice.invoicePending = !this.currentInvoice.invoicePending;
-      this.currentInvoice.invoicePaid = !this.currentInvoice.invoicePaid;
+    markAsPaid(docId) {
+      this.UPDATE_STATUS_TO_PAID(docId);
+    },
+    markAsPending(docId) {
+      this.UPDATE_STATUS_TO_PENDING(docId)
     },
     toggleEditInvoice() {
       this.TOGGLE_EDIT_INVOICE();
       this.TOGGLE_INVOICE();
+    },
+    async deleteInvoice(docId) {
+
+
+      this.DELETE_INVOICE(docId);
+      this.$router.push({name: "Invoice"})
     },
     async print() {
       await this.$htmlToPaper('invoice', {
@@ -221,19 +241,21 @@ export default {
       });
     }
   },
-  mounted() {
+
+
+  computed: {
+    ...mapState(['currentInvoiceArray', 'invoiceModal', 'editInvoice']),
 
   },
 
-  computed: {
-    ...mapState(['currentInvoiceArray', 'invoiceModal']),
-    Status() {
-      if (this.currentInvoice.invoicePending) {
-        return " En Attente"
+  watch: {
+    editInvoice() {
+      if (!this.editInvoice) {
+        this.currentInvoice = this.currentInvoiceArray[0];
       }
-      return " Payé"
     },
   }
+
 }
 </script>
 
@@ -286,12 +308,13 @@ h3 {
 }
 
 .btn-crud {
-  background-color: #FFC68A;
-  color: #121212;
+  background-color: #383838;
+  color: #E5E5E5;
 }
 
+
 .btn-crud:hover {
-  background-color: #e59827;
+  background-color: #FFC68A;
 
 }
 
@@ -457,6 +480,10 @@ td {
 
 }
 
+.paid, .pending {
+  font-size: 14px;
+  font-weight: bold;
+}
 
 .pending {
   border: 1px solid #FFC68A;

@@ -218,7 +218,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['UPDATE_INVOICE']),
+    ...mapActions(['UPDATE_INVOICE', 'GET_INVOICES']),
     ...mapMutations(['TOGGLE_INVOICE', 'TOGGLE_INVOICE', 'TOGGLE_EDIT_INVOICE']),
     closeInvoice() {
       this.toggleWarning();
@@ -263,6 +263,7 @@ export default {
       })
       this.loading = false;
       this.TOGGLE_INVOICE();
+      this.GET_INVOICES();
     },
     async updateInvoice() {
 
@@ -281,7 +282,7 @@ export default {
         docId: this.docId,
         routeId: this.$route.params.invoiceId,
       };
-      console.log(data)
+
       this.UPDATE_INVOICE(data);
 
     },
@@ -289,8 +290,9 @@ export default {
       if (this.editInvoice) {
         this.updateInvoice();
       } else {
-        console.log("yoho");
+
         this.uploadInvoice();
+
       }
 
 

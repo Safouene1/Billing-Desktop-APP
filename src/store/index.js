@@ -11,6 +11,7 @@ export default createStore({
         currentInvoiceArray: null,
         editInvoice: null,
 
+
     },
     mutations: {
         TOGGLE_INVOICE(state) {
@@ -46,6 +47,14 @@ export default createStore({
         DELETE_INVOICE(state, payload) {
 
             state.invoiceData = state.invoiceData.filter(invoice => invoice.docId !== payload)
+        },
+        TOGGLE_PAYEMENT(state, payload) {
+            state.invoiceData.forEach(invoice => {
+                if (invoice.docId == payload) {
+                    invoice.invoicePaid = !invoice.invoicePaid;
+                    invoice.invoicePending = !invoice.invoicePending;
+                }
+            })
         }
     },
     actions: {
@@ -73,10 +82,41 @@ export default createStore({
         async UPDATE_INVOICE({commit, dispatch}, {docId, routeId}) {
             commit('DELETE_INVOICE', docId);
             await dispatch('GET_INVOICES');
-            console.log("i finished in  actions");
+
             commit('TOGGLE_INVOICE');
             commit('TOGGLE_EDIT_INVOICE');
             commit('SET_CURRENT_INVOICE', routeId);
+        },
+        async DELETE_INVOICE({commit}, docId) {
+
+
+            const getInvoice = db.collection("invoices").doc(docId);
+
+            await getInvoice.delete().then(() => {
+                console.log("Document successfully deleted!");
+            }).catch((error) => {
+                console.error("Error removing document: ", error);
+            });
+
+            commit('DELETE_INVOICE', docId);
+
+
+        },
+        async UPDATE_STATUS_TO_PAID({commit}, docId) {
+            const getInvoice = db.collection("invoices").doc(docId);
+            await getInvoice.update({
+                invoicePaid: true,
+                invoicePending: false,
+            });
+            commit("TOGGLE_PAYEMENT", docId);
+        },
+        async UPDATE_STATUS_TO_PENDING({commit}, docId) {
+            const getInvoice = db.collection("invoices").doc(docId);
+            await getInvoice.update({
+                invoicePaid: false,
+                invoicePending: true,
+            });
+            commit("TOGGLE_PAYEMENT", docId);
         }
     },
     modules: {}

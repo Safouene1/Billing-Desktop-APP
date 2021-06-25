@@ -25,22 +25,24 @@
               </button>
             </div>
             <div class="col-5 ">
-              <button id="dropdownMenuLink" aria-expanded="false"
-                      class="btn ftr py-2 rounded-pill  px-4 dropdown-toggle"
-                      type="button" @click="toggleFilter">
+              <button
+                  class="btn ftr py-2  px-4 dropdown-toggle"
+                  type="button" @click="toggleFilter">
                 <svg class=" px-1 bi bi-funnel-fill" fill="currentColor" height="30" viewBox="0 0 16 16"
                      width="30" xmlns="http://www.w3.org/2000/svg">
                   <path
                       d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2z"/>
                 </svg>
-                Filtre par:
+                Filtre par: <span>{{ filteredInvoice }}</span>
               </button>
-              <ul v-show="filtermenu" class="drop rounded px-6 mx-3 my-2">
-                <li><a class="dropdown-item" href="#">Brouillon</a></li>
-
-                <li><a class="dropdown-item" href="#">En Attente</a></li>
-                <li><a class="dropdown-item" href="#">Payé</a></li>
-                <li><a class="dropdown-item" href="#">Effacer filtre</a></li>
+              <ul v-show="filtermenu" class="col-2 drop rounded  mx-3 my-2">
+                <li :class="{activeFilter : filteredInvoice=='En Attente'} " class="dropdown-item"
+                    @click="filteredInvoices">En Attente
+                </li>
+                <li :class="{activeFilter : filteredInvoice=='Payé'} " class="dropdown-item" @click="filteredInvoices">
+                  Payé
+                </li>
+                <li class="dropdown-item" @click="filteredInvoices">Effacer Filtres</li>
 
               </ul>
             </div>
@@ -82,13 +84,13 @@
             </div>
           </div>
 
-          <invoices-list v-for="(invoice , index) in invoiceData" :key="index" :invoice="invoice"/>
+          <invoices-list v-for="(invoice , index) in filteredData" :key="index" :invoice="invoice"/>
         </div>
       </div>
 
     </div>
 
-      <invoice-modal v-if="invoiceModal"/>
+    <invoice-modal v-if="invoiceModal" :key="index"/>
 
 
   </div>
@@ -118,6 +120,8 @@ export default {
     return {
 
       filtermenu: null,
+
+      filteredInvoice: null,
     }
   },
   methods: {
@@ -125,7 +129,17 @@ export default {
     toggleFilter() {
       this.filtermenu = !this.filtermenu;
     },
+    filteredInvoices(e) {
+      if (e.target.innerText === 'Effacer Filtres') {
+        this.filteredInvoice = null;
 
+        this.toggleFilter();
+        return;
+      }
+      this.toggleFilter();
+      return this.filteredInvoice = e.target.innerText;
+
+    },
     newInvoice() {
       this.TOGGLE_INVOICE();
     },
@@ -133,7 +147,17 @@ export default {
 
   },
   computed: {
-    ...mapState(['invoiceModal', 'invoiceData', 'invoicesLoaded'])
+    ...mapState(['invoiceModal', 'invoiceData', 'invoicesLoaded']),
+    filteredData() {
+      return this.invoiceData.filter(invoice => {
+        if (this.filteredInvoice === "En Attente") {
+          return invoice.invoicePending === true;
+        } else if (this.filteredInvoice === "Payé") {
+          return invoice.invoicePaid === true;
+        }
+        return invoice;
+      })
+    }
   }
 };
 </script>
@@ -168,17 +192,18 @@ color: #0275db;
 }
 
 .nvfacture:hover {
-color: #18191a;
+  color: #3a3b3c;
 }
 
 .dropdown-item {
-color: white;
-margin-top: 5px;
+  color: white;
+  padding: 10px;
+  margin-top: 10px;
 }
 
 .dropdown-item:hover, .dropdown-item:focus {
-background-color: #15202B;
-color: #e4e6eb;
+  background-color: #3a3b3c;
+  color: #e4e6eb;
 }
 
 li {
@@ -190,8 +215,14 @@ li {
   position: absolute;
   z-index: 1;
   background-color: #141415;
+  opacity: 80%;
   padding: 15px 5px;
 
+}
+
+.activeFilter {
+  background-color: #FFC68A;
+  color: #18191a;
 }
 
 .bar {
